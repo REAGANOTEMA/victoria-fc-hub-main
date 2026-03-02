@@ -6,15 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import clubLogo from "@/assets/club-logo.png";
-import { db } from "./firebase";
-import { collection, getDocs } from "firebase/firestore";
-
-const test = async () => {
-  const querySnapshot = await getDocs(collection(db, "test"));
-  console.log(querySnapshot.docs.map(doc => doc.data()));
-};
-
-test();
+import { auth } from "./firebase";
 
 export function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
