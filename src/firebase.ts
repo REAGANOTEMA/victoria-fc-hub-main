@@ -1,19 +1,19 @@
 // src/firebase.ts
 import { initializeApp } from "firebase/app";
-import { 
-  getAuth, 
-  GoogleAuthProvider, 
-  signInWithPopup, 
-  signOut, 
-  onAuthStateChanged, 
-  User 
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+  User,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
 
 // -------------------------------
-// Firebase Config from Environment Variables
+// Firebase config from environment
 // -------------------------------
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -26,14 +26,10 @@ const firebaseConfig = {
 };
 
 // -------------------------------
-// Initialize Firebase App
+// Initialize Firebase
 // -------------------------------
 export const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
-
-// -------------------------------
-// Firebase Services
-// -------------------------------
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
@@ -45,10 +41,8 @@ export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 
 // -------------------------------
-// Auth Helper Functions
+// Auth helpers
 // -------------------------------
-
-// Sign in with Google
 export const signInWithGoogle = async (): Promise<User | null> => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
@@ -59,7 +53,6 @@ export const signInWithGoogle = async (): Promise<User | null> => {
   }
 };
 
-// Sign out current user
 export const signOutUser = async () => {
   try {
     await signOut(auth);
@@ -68,7 +61,6 @@ export const signOutUser = async () => {
   }
 };
 
-// Listen for auth state changes
 export const onAuthChange = (callback: (user: User | null) => void) => {
   return onAuthStateChanged(auth, callback);
 };
