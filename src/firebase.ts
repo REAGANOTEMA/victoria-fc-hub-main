@@ -1,22 +1,31 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { 
+  getAuth, 
+  GoogleAuthProvider 
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// Your Firebase config
+// Firebase config from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyAeaTDinB7bmLdW9hQL1M3EfkO62B1UFGY",
-  authDomain: "victoria-fc-orom.firebaseapp.com",
-  projectId: "victoria-fc-orom",
-  storageBucket: "victoria-fc-orom.firebasestorage.app",
-  messagingSenderId: "620091666222",
-  appId: "1:620091666222:web:0a6078d3590e95a17894bf"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
+// Initialize app
 const app = initializeApp(firebaseConfig);
 
-// Export services to use in your app
+// Services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+// Google Provider
+export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: "select_account",
+});
