@@ -3,43 +3,43 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
+// ✅ Final Vite config for Render + Firebase + React
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::", // allows LAN/Render dev server access
+    host: "::", // LAN + Render dev server access
     port: 8080,
     hmr: {
-      overlay: true, // show errors in browser
+      overlay: true, // show compile/runtime errors in browser
     },
   },
   plugins: [
-    react(),
+    react(), 
     mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"), // allows imports like "@/firebase"
+      "@": path.resolve(__dirname, "./src"), // absolute imports like "@/firebase"
     },
   },
   build: {
-    outDir: "dist", // Render expects the publish directory to exist
+    outDir: "dist", // ✅ Render expects this folder
     sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // separate big libraries for faster caching
+          // separate vendor libraries for faster caching
           if (id.includes("node_modules")) return "vendor";
         },
       },
     },
-    chunkSizeWarningLimit: 2000, // optional, avoids annoying warnings
+    chunkSizeWarningLimit: 2000,
   },
   css: {
     preprocessorOptions: {
-      // Add SCSS, Less, or PostCSS options if needed
+      // SCSS or PostCSS options if needed
     },
   },
   define: {
-    "process.env": {}, // ensures env variables work with Firebase in Vite
+    "process.env": {}, // makes Firebase env variables compatible in Vite
   },
 }));
