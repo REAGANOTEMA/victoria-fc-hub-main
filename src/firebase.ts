@@ -1,3 +1,4 @@
+// src/firebase.ts
 import { initializeApp } from "firebase/app";
 import { 
   getAuth, 
@@ -6,7 +7,7 @@ import {
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// Firebase config from environment variables
+// ✅ Use environment variables safely
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -16,7 +17,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize app
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
 // Services
@@ -24,8 +25,19 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// Google Provider
+// ✅ Google Auth Provider
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
-  prompt: "select_account",
+  prompt: "select_account", // always prompt account selection
 });
+
+// Optional: reusable login function
+export const signInWithGoogle = async () => {
+  try {
+    const result = await auth.signInWithPopup(googleProvider);
+    return result.user; // returns Firebase User object
+  } catch (error) {
+    console.error("Firebase Google login error:", error);
+    throw error;
+  }
+};
