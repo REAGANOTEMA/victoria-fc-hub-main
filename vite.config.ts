@@ -6,38 +6,40 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::", // allows Render dev server
+    host: "::", // allows LAN/Render dev server access
     port: 8080,
     hmr: {
-      overlay: false,
+      overlay: true, // show errors in browser
     },
   },
   plugins: [
-    react(), 
-    mode === "development" && componentTagger()
+    react(),
+    mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"), // absolute imports like "@/firebase"
+      "@": path.resolve(__dirname, "./src"), // allows imports like "@/firebase"
     },
   },
   build: {
-    outDir: "build", // important for Render hosting
+    outDir: "dist", // Render expects the publish directory to exist
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // optional: separate big libraries for faster loading
-          if (id.includes("node_modules")) {
-            return "vendor";
-          }
+          // separate big libraries for faster caching
+          if (id.includes("node_modules")) return "vendor";
         },
       },
     },
-    chunkSizeWarningLimit: 2000, // increases chunk warning limit (optional)
+    chunkSizeWarningLimit: 2000, // optional, avoids annoying warnings
   },
   css: {
     preprocessorOptions: {
-      // if you use SCSS or other preprocessors
+      // Add SCSS, Less, or PostCSS options if needed
     },
+  },
+  define: {
+    "process.env": {}, // ensures env variables work with Firebase in Vite
   },
 }));

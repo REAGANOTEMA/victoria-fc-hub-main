@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getAnalytics } from "firebase/analytics";
 
 // -------------------------------
 // Firebase Config from Environment Variables
@@ -21,12 +22,14 @@ const firebaseConfig = {
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // -------------------------------
 // Initialize Firebase App
 // -------------------------------
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
+export const analytics = getAnalytics(app);
 
 // -------------------------------
 // Firebase Services
@@ -39,9 +42,7 @@ export const storage = getStorage(app);
 // Google Auth Provider
 // -------------------------------
 export const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({
-  prompt: "select_account", // Always prompt account selection
-});
+googleProvider.setCustomParameters({ prompt: "select_account" });
 
 // -------------------------------
 // Auth Helper Functions
