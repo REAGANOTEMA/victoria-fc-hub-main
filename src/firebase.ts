@@ -2,12 +2,18 @@
 import { initializeApp } from "firebase/app";
 import { 
   getAuth, 
-  GoogleAuthProvider 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged, 
+  User 
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// ✅ Use environment variables safely
+// -------------------------------
+// Firebase Config from Environment Variables
+// -------------------------------
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -17,27 +23,51 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase app
+// -------------------------------
+// Initialize Firebase App
+// -------------------------------
 const app = initializeApp(firebaseConfig);
 
-// Services
+// -------------------------------
+// Firebase Services
+// -------------------------------
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// ✅ Google Auth Provider
+// -------------------------------
+// Google Auth Provider
+// -------------------------------
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
-  prompt: "select_account", // always prompt account selection
+  prompt: "select_account", // Always prompt account selection
 });
 
-// Optional: reusable login function
-export const signInWithGoogle = async () => {
+// -------------------------------
+// Auth Helper Functions
+// -------------------------------
+
+// Sign in with Google
+export const signInWithGoogle = async (): Promise<User | null> => {
   try {
-    const result = await auth.signInWithPopup(googleProvider);
-    return result.user; // returns Firebase User object
+    const result = await signInWithPopup(auth, googleProvider);
+    return result.user;
   } catch (error) {
     console.error("Firebase Google login error:", error);
-    throw error;
+    return null;
   }
+};
+
+// Sign out current user
+export const signOutUser = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Firebase sign out error:", error);
+  }
+};
+
+// Listen for auth state changes
+export const onAuthChange = (callback: (user: User | null) => void) => {
+  return onAuthStateChanged(auth, callback);
 };
