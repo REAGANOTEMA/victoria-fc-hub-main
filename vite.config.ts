@@ -1,37 +1,24 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-// ✅ Import componentTagger only if you use it in development
-import { componentTagger } from "lovable-tagger";
 
-export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",           // LAN + Render dev server access
-    port: 8080,
-    hmr: { overlay: true }, // show compile/runtime errors in browser
-  },
-  plugins: [
-    react(),
-    mode === "development" && componentTagger(), // only in dev
-  ].filter(Boolean),
+export default defineConfig({
+  base: "", // ensures HashRouter works on static hosting
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"), // allows "@/firebase" imports
-    },
+    alias: { "@": path.resolve(__dirname, "./src") },
   },
+  plugins: [react()],
   build: {
-    outDir: "build",        // ✅ Render expects this folder
+    outDir: "build",
     sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes("node_modules")) return "vendor"; // split vendors
+          if (id.includes("node_modules")) return "vendor";
         },
       },
     },
     chunkSizeWarningLimit: 2000,
   },
-  define: {
-    "process.env": {}, // makes Firebase env variables work in Vite
-  },
-}));
+  define: { "process.env": {} },
+});

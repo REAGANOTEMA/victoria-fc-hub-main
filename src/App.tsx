@@ -25,132 +25,38 @@ import { AuthPage } from "./pages/AuthPage";
 
 const queryClient = new QueryClient();
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <>
-      <Header />
-      {children}
-      <Footer />
-    </>
-  );
-};
+const Layout = ({ children }: { children: React.ReactNode }) => (
+  <>
+    <Header />
+    {children}
+    <Footer />
+  </>
+);
 
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
-
           <HashRouter>
             <Routes>
-
-              <Route
-                path="/"
-                element={
-                  <Layout>
-                    <Index />
-                  </Layout>
-                }
-              />
-
-              <Route
-                path="/about"
-                element={
-                  <Layout>
-                    <AboutPage />
-                  </Layout>
-                }
-              />
-
-              <Route
-                path="/team"
-                element={
-                  <Layout>
-                    <TeamPage />
-                  </Layout>
-                }
-              />
-
-              <Route
-                path="/fixtures"
-                element={
-                  <Layout>
-                    <FixturesPage />
-                  </Layout>
-                }
-              />
-
-              <Route
-                path="/academy"
-                element={
-                  <Layout>
-                    <AcademyPage />
-                  </Layout>
-                }
-              />
-
-              <Route
-                path="/gallery"
-                element={
-                  <Layout>
-                    <GalleryPage />
-                  </Layout>
-                }
-              />
-
-              <Route
-                path="/news"
-                element={
-                  <Layout>
-                    <NewsPage />
-                  </Layout>
-                }
-              />
-
-              <Route
-                path="/donate"
-                element={
-                  <Layout>
-                    <DonatePage />
-                  </Layout>
-                }
-              />
-
-              <Route
-                path="/contact"
-                element={
-                  <Layout>
-                    <ContactPage />
-                  </Layout>
-                }
-              />
-
-              <Route
-                path="/auth"
-                element={
-                  <Layout>
-                    <AuthPage />
-                  </Layout>
-                }
-              />
-
+              <Route path="/" element={<Layout><Index /></Layout>} />
+              <Route path="/about" element={<Layout><AboutPage /></Layout>} />
+              <Route path="/team" element={<Layout><TeamPage /></Layout>} />
+              <Route path="/fixtures" element={<Layout><FixturesPage /></Layout>} />
+              <Route path="/academy" element={<Layout><AcademyPage /></Layout>} />
+              <Route path="/gallery" element={<Layout><GalleryPage /></Layout>} />
+              <Route path="/news" element={<Layout><NewsPage /></Layout>} />
+              <Route path="/donate" element={<Layout><DonatePage /></Layout>} />
+              <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
+              <Route path="/auth" element={<Layout><AuthPage /></Layout>} />
               <Route path="/admin" element={<AdminPage />} />
-
-              <Route
-                path="*"
-                element={
-                  <Layout>
-                    <NotFound />
-                  </Layout>
-                }
-              />
-
+              <Route path="*" element={<Layout><NotFound /></Layout>} />
             </Routes>
           </HashRouter>
 
           <Toaster />
           <Sonner />
-
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
