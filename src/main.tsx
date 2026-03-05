@@ -1,20 +1,12 @@
-// src/main.tsx
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import "./index.css"; // Make sure this file exists and imports Tailwind or your styles
+import "./index.css";
 
-// Get root element
-const rootElement = document.getElementById("root");
-if (!rootElement) {
-  throw new Error("Root element not found. Make sure your index.html has <div id='root'></div>");
-}
+const root = document.getElementById("root");
+if (!root) throw new Error("Root element not found");
 
-// Create React root
-const root = createRoot(rootElement);
-
-// Render the app
-root.render(
+createRoot(root).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

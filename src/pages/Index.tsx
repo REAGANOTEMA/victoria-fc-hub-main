@@ -1,18 +1,10 @@
-import { HeroSection } from "@/components/HeroSection";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight, Trophy, MapPin, Users, Star, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { db } from "@/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { HeroSection } from "@/components/HeroSection";
 
-const test = async () => {
-  const querySnapshot = await getDocs(collection(db, "test"));
-  console.log(querySnapshot.docs.map(doc => doc.data()));
-};
-
-test();
 interface NewsItem {
   id: string;
   title: string;
@@ -40,6 +32,7 @@ export default function Index() {
   const [latestNews, setLatestNews] = useState<NewsItem[]>([]);
 
   useEffect(() => {
+    // Fetch latest news from Supabase
     supabase
       .from("news")
       .select("id, title, image_url, category, author, created_at")
@@ -51,16 +44,15 @@ export default function Index() {
 
   return (
     <div>
+      {/* Hero Section */}
       <HeroSection />
 
       {/* Club Values */}
       <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <p className="text-gold font-semibold text-sm uppercase tracking-widest mb-2">Our Foundation</p>
-            <h2 className="section-heading">Club Values</h2>
-            <div className="gold-line mx-auto mt-3" />
-          </div>
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-gold font-semibold text-sm uppercase tracking-widest mb-2">Our Foundation</p>
+          <h2 className="section-heading">Club Values</h2>
+          <div className="gold-line mx-auto mt-3 mb-12" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="card-club p-6 text-center group">
@@ -75,7 +67,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Quick Fixtures Teaser */}
+      {/* Latest Fixtures */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
@@ -120,13 +112,10 @@ export default function Index() {
       </section>
 
       {/* Competitions */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-muted/30 text-center">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <p className="text-gold font-semibold text-sm uppercase tracking-widest mb-2">Our Journey</p>
-            <h2 className="section-heading">Competitions</h2>
-            <div className="gold-line mx-auto mt-3" />
-          </div>
+          <p className="text-gold font-semibold text-sm uppercase tracking-widest mb-2">Our Journey</p>
+          <h2 className="section-heading mb-8">Competitions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {competitions.map((c) => (
               <div key={c.name} className="card-club p-6 text-center">
@@ -139,7 +128,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* News */}
+      {/* Latest News */}
       {latestNews.length > 0 && (
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
@@ -147,7 +136,6 @@ export default function Index() {
               <div>
                 <p className="text-gold text-sm uppercase tracking-widest mb-1">Stay Updated</p>
                 <h2 className="section-heading">Latest News</h2>
-                <div className="gold-line mt-2" />
               </div>
               <Link to="/news" className="text-primary hover:text-gold transition-colors text-sm font-semibold flex items-center gap-1">
                 View All <ArrowRight className="w-4 h-4" />
@@ -167,9 +155,7 @@ export default function Index() {
                   )}
                   <div className="p-5">
                     <span className="text-xs font-semibold text-gold uppercase tracking-wider">{item.category}</span>
-                    <h3 className="font-heading text-lg font-bold text-primary mt-1 mb-2 group-hover:text-gold transition-colors">
-                      {item.title}
-                    </h3>
+                    <h3 className="font-heading text-lg font-bold text-primary mt-1 mb-2 group-hover:text-gold transition-colors">{item.title}</h3>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Calendar className="w-3 h-3" />
                       {new Date(item.created_at).toLocaleDateString()}
@@ -185,34 +171,18 @@ export default function Index() {
       )}
 
       {/* CTA - Join Academy */}
-      <section className="py-20 bg-gradient-club text-primary-foreground relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-gold blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full bg-gold blur-3xl" />
-        </div>
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="font-heading text-4xl md:text-6xl font-bold uppercase mb-4">
-            Join Our Academy
-          </h2>
-          <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto mb-8">
-            We believe that any chance of life for successful talent is possible with teamwork. Apply now and leave no one behind.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/academy">
-              <Button size="lg" className="btn-gold px-10 py-4 rounded-xl text-base font-bold uppercase tracking-wider">
-                Apply Now
-              </Button>
-            </Link>
-            <Link to="/about">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 px-10 py-4 rounded-xl text-base font-bold uppercase tracking-wider"
-              >
-                Our Story
-              </Button>
-            </Link>
-          </div>
+      <section className="py-20 bg-gradient-to-r from-primary to-gold text-primary-foreground text-center">
+        <h2 className="font-heading text-4xl md:text-6xl font-bold uppercase mb-4">Join Our Academy</h2>
+        <p className="max-w-2xl mx-auto mb-8">
+          We believe in teamwork and developing talent. Apply now and leave no one behind.
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Link to="/academy">
+            <Button className="btn-gold px-10 py-4 rounded-xl font-bold uppercase tracking-wider">Apply Now</Button>
+          </Link>
+          <Link to="/about">
+            <Button variant="outline" className="px-10 py-4 rounded-xl font-bold uppercase tracking-wider">Our Story</Button>
+          </Link>
         </div>
       </section>
     </div>

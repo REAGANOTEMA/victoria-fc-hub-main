@@ -4,9 +4,6 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// -------------------------------
-// Firebase Config from Environment Variables
-// -------------------------------
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -17,24 +14,15 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// -------------------------------
-// Initialize Firebase
-// -------------------------------
 export const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// -------------------------------
-// Google Auth Provider
-// -------------------------------
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 
-// -------------------------------
-// Auth Helper Functions
-// -------------------------------
 export const signInWithGoogle = async (): Promise<User | null> => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
@@ -46,11 +34,8 @@ export const signInWithGoogle = async (): Promise<User | null> => {
 };
 
 export const signOutUser = async () => {
-  try {
-    await signOut(auth);
-  } catch (error) {
-    console.error("Firebase sign out error:", error);
-  }
+  try { await signOut(auth); } 
+  catch (error) { console.error("Firebase sign out error:", error); }
 };
 
 export const onAuthChange = (callback: (user: User | null) => void) => {
