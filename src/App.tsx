@@ -2,10 +2,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AboutPage from "./pages/AboutPage";
@@ -29,31 +30,35 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
   </>
 );
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/auth" element={<Layout><AuthPage /></Layout>} />
-            <Route path="/" element={<Layout><Index /></Layout>} />
-            <Route path="/about" element={<Layout><AboutPage /></Layout>} />
-            <Route path="/team" element={<Layout><TeamPage /></Layout>} />
-            <Route path="/fixtures" element={<Layout><FixturesPage /></Layout>} />
-            <Route path="/academy" element={<Layout><AcademyPage /></Layout>} />
-            <Route path="/gallery" element={<Layout><GalleryPage /></Layout>} />
-            <Route path="/news" element={<Layout><NewsPage /></Layout>} />
-            <Route path="/donate" element={<Layout><DonatePage /></Layout>} />
-            <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
-            <Route path="*" element={<Layout><NotFound /></Layout>} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+
+        <HashRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Layout><Index /></Layout>} />
+              <Route path="/about" element={<Layout><AboutPage /></Layout>} />
+              <Route path="/team" element={<Layout><TeamPage /></Layout>} />
+              <Route path="/fixtures" element={<Layout><FixturesPage /></Layout>} />
+              <Route path="/academy" element={<Layout><AcademyPage /></Layout>} />
+              <Route path="/gallery" element={<Layout><GalleryPage /></Layout>} />
+              <Route path="/news" element={<Layout><NewsPage /></Layout>} />
+              <Route path="/donate" element={<Layout><DonatePage /></Layout>} />
+              <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
+              <Route path="/auth" element={<Layout><AuthPage /></Layout>} />
+              <Route path="/admin" element={<AdminPage />} />
+              <Route path="*" element={<Layout><NotFound /></Layout>} />
+            </Routes>
+          </AuthProvider>
+        </HashRouter>
+
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
