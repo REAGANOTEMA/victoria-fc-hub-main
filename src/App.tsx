@@ -1,9 +1,11 @@
 import React from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+
 import { AuthProvider } from "@/hooks/useAuth";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -27,7 +29,7 @@ const queryClient = new QueryClient();
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <>
     <Header />
-    <main style={{ minHeight: "80vh" }}>{children}</main>
+    <main className="min-h-[80vh]">{children}</main>
     <Footer />
   </>
 );
@@ -54,6 +56,7 @@ export default function App() {
             </Routes>
           </HashRouter>
 
+          {/* Toast Notifications */}
           <Toaster position="top-right" />
           <Sonner position="top-right" />
         </AuthProvider>
