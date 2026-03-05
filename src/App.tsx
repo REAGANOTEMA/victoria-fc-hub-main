@@ -26,10 +26,10 @@ import { AuthPage } from "@/pages/AuthPage";
 
 const queryClient = new QueryClient();
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+const Layout = ({ children }: { children: React.ReactNode }) => (
   <>
     <Header />
-    <main className="min-h-[80vh]">{children}</main>
+    <main className="min-h-screen">{children}</main>
     <Footer />
   </>
 );
@@ -41,6 +41,7 @@ export default function App() {
         <AuthProvider>
           <HashRouter>
             <Routes>
+
               <Route path="/" element={<Layout><Index /></Layout>} />
               <Route path="/about" element={<Layout><AboutPage /></Layout>} />
               <Route path="/team" element={<Layout><TeamPage /></Layout>} />
@@ -51,14 +52,17 @@ export default function App() {
               <Route path="/donate" element={<Layout><DonatePage /></Layout>} />
               <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
               <Route path="/auth" element={<Layout><AuthPage /></Layout>} />
+
               <Route path="/admin" element={<AdminPage />} />
+
               <Route path="*" element={<Layout><NotFound /></Layout>} />
+
             </Routes>
           </HashRouter>
 
-          {/* Toast Notifications */}
           <Toaster position="top-right" />
           <Sonner position="top-right" />
+
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>

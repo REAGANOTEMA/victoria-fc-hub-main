@@ -1,9 +1,19 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from "firebase/auth";
+import { getAnalytics, isSupported, Analytics } from "firebase/analytics";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+  User
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
+// -----------------------------
+// Firebase Config (from .env)
+// -----------------------------
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -14,15 +24,44 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
+// -----------------------------
+// Initialize Firebase
+// -----------------------------
 export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+
+// -----------------------------
+// Firebase Services
+// -----------------------------
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-export const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: "select_account" });
+// -----------------------------
+// Analytics (safe for SSR/Render)
+// -----------------------------
+let analytics: Analytics | undefined;
 
+if (typeof window !== "undefined") {
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  });
+}
+
+export { analytics };
+
+// -----------------------------
+// Google Auth Provider
+// -----------------------------
+export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: "select_account",
+});
+
+// -----------------------------
+// Auth Helpers
+// -----------------------------
 export const signInWithGoogle = async (): Promise<User | null> => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
@@ -33,9 +72,12 @@ export const signInWithGoogle = async (): Promise<User | null> => {
   }
 };
 
-export const signOutUser = async () => {
-  try { await signOut(auth); } 
-  catch (error) { console.error("Firebase sign out error:", error); }
+export const signOutUser = async (): Promise<void> => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Firebase sign out error:", error);
+  }
 };
 
 export const onAuthChange = (callback: (user: User | null) => void) => {
